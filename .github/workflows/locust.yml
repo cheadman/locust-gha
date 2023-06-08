@@ -19,6 +19,9 @@ on:
         description: 'Load test duration in minutes'
         required: false
         default: '1'
+  push:
+    branches:
+      - locust
 
 jobs:
   load_test:
@@ -62,6 +65,7 @@ jobs:
           pip install locust
       
       - name: Run Locust load test
+        timeout-minutes: ${{ toInt(github.event.inputs.test_duration) }}
         env:
           ENDPOINT: ${{ github.event.inputs.endpoint }}
           USERS: ${{ github.event.inputs.users }}
