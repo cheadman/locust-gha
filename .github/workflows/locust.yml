@@ -70,7 +70,7 @@ jobs:
           pip install locust
       
       - name: Run Locust load test
-        timeout-minutes: ${{ steps.convert.outputs.duration }}
+        timeout-minutes: "${{ steps.convert.outputs.duration }}"
         env:
           ENDPOINT: ${{ github.event.inputs.endpoint }}
           USERS: ${{ github.event.inputs.users }}
