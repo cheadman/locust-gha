@@ -36,11 +36,6 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Convert string to number
-        id: convert
-        run: |
-          echo "::set-output name=duration::${{ github.event.inputs.test_duration }}"
-      
       - name: Create locustfile.py
         run: |
           echo '''
@@ -70,7 +65,6 @@ jobs:
           pip install locust
       
       - name: Run Locust load test
-        timeout-minutes: "${{ steps.convert.outputs.duration }}"
         env:
           ENDPOINT: ${{ github.event.inputs.endpoint }}
           USERS: ${{ github.event.inputs.users }}
