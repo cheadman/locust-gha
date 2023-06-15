@@ -7,6 +7,10 @@ on:
         description: 'Endpoint URL'
         required: true
         default: ''
+      test_file:
+        description: 'Name of the test file in the locust directory to run.'
+        required: true
+        default: 'load.py'
       users:
         description: 'Number of Users'
         required: false
@@ -20,13 +24,17 @@ on:
         required: false
         default: '1'
       min_wait:
-        description: 'the min time between requests for a user'
+        description: 'The min time between requests for a user'
         required: false
         default: '1'
       max_wait:
-        description: 'the max time between requests for a user'
+        description: 'The max time between requests for a user'
         required: false
         default: '3'
+      headers:
+        description: 'The http headers to include in the request'
+        required: false
+        default: '{"HeaderName1": "HeaderValue1", "HeaderName2": "HeaderValue2"}'
   push:
     branches:
       - locust
@@ -56,6 +64,8 @@ jobs:
           TEST_DURATION: ${{ github.event.inputs.test_duration }}
           LOCUST_MIN_WAIT: ${{ github.event.inputs.min_wait }}
           LOCUST_MAX_WAIT: ${{ github.event.inputs.max_wait }}
+          TEST_FILE: ${{ github.event.inputs.test_file }}
+          LOCUST_HEADERS: ${{ github.event.inputs.headers }}
         run: |
           mkdir reports          
           locust --host=$ENDPOINT -f locust/load.py --users $USERS --spawn-rate $SPAWN_RATE --run-time ${TEST_DURATION}m --csv=reports/report.csv --html=reports/report.html --headless
