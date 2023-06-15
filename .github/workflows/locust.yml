@@ -23,14 +23,22 @@ on:
         description: 'Load test duration in minutes'
         required: false
         default: '1'
-      min_wait:
-        description: 'The min time between requests for a user'
+      wait_time:
+        description: 'The time between requests for a user (in the format min-max)'
         required: false
-        default: '1'
-      max_wait:
-        description: 'The max time between requests for a user'
+        default: '1-3'
+      req_type:
+        description: 'GET, POST, PUT, PATCH DELETE'
         required: false
-        default: '3'
+        default: 'GET'
+      req_body:
+        description: 'The message body of a request that supports it'
+        required: false
+        default: '{"locust": "is neat"}'
+      query_params:
+        description: 'The query string params for a request'
+        required: false
+        default: '{"param1": "value1", "param2": "value2"}'
       headers:
         description: 'The http headers to include in the request'
         required: false
@@ -56,19 +64,26 @@ jobs:
         run: |
           pip install locust
       
+      - name: Parse wait time range
+        id: parse_wait_time
+        run: |
+          wait_time_range=(${{ github.event.inputs.wait_time//-/ }})  # Split the input using "-"
+          echo "::set-output name=min_wait::${wait_time_range[0]}"
+          echo "::set-output name=max_wait::${wait_time_range[1]}"
+      
       - name: Run Locust load test
         env:
           ENDPOINT: ${{ github.event.inputs.endpoint }}
           USERS: ${{ github.event.inputs.users }}
           SPAWN_RATE: ${{ github.event.inputs.spawn_rate }}
           TEST_DURATION: ${{ github.event.inputs.test_duration }}
-          LOCUST_MIN_WAIT: ${{ github.event.inputs.min_wait }}
-          LOCUST_MAX_WAIT: ${{ github.event.inputs.max_wait }}
+          LOCUST_MIN_WAIT: ${{ steps.parse_wait_time.outputs.min_wait }}
+          LOCUST_MAX_WAIT: ${{ steps.parse_wait_time.outputs.max_wait }}
           TEST_FILE: ${{ github.event.inputs.test_file }}
           LOCUST_HEADERS: ${{ github.event.inputs.headers }}
         run: |
           mkdir reports          
-          locust --host=$ENDPOINT -f locust/load.py --users $USERS --spawn-rate $SPAWN_RATE --run-time ${TEST_DURATION}m --csv=reports/report.csv --html=reports/report.html --headless
+          locust --host=$ENDPOINT -f locust/${TEST_FILE} --users $USERS --spawn-rate $SPAWN_RATE --run-time ${TEST_DURATION}m --csv=reports/report.csv --html=reports/report.html --headless
       
       - name: Upload reports
         uses: actions/upload-artifact@v2

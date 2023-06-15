@@ -20,6 +20,8 @@ class MyUser(HttpUser):
             self.client.get("/", params=query_params, headers=headers)
         elif req_type.upper() == 'POST':
             self.client.post("/", json=req_body, headers=headers)
+        elif req_type.upper() == 'PATCH':
+            self.client.patch("/", json=req_body, headers=headers)
         elif req_type.upper() == 'PUT':
             self.client.put("/", json=req_body, headers=headers)
         elif req_type.upper() == 'DELETE':
