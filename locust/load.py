@@ -18,7 +18,7 @@ class MyUser(HttpUser):
         if req_type.upper() == 'GET':
             self.client.get("/", headers=headers)
         elif req_type.upper() == 'POST':
-            self.client.post(url="/", json=req_body, headers=headers)
+            self.client.post("/", json=req_body, headers=headers)
         elif req_type.upper() == 'PATCH':
             self.client.patch("/", json=req_body, headers=headers)
         elif req_type.upper() == 'PUT':
