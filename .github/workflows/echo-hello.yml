@@ -5,7 +5,7 @@ jobs:
   deploy:
     environment:
       name: echo hi
-    runs-on: self-hosted
+    runs-on: prod
     steps:
       - name: Checkout
         uses: actions/checkout@v3
