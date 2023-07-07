@@ -1,4 +1,4 @@
-name: Deploy static content to Pages
+name: Echo hello on self hosted
 
 on: workflow_dispatch
 jobs:
