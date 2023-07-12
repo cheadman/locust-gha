@@ -6,6 +6,7 @@ jobs:
     environment:
       name: echo hi
     runs-on: nonprod
+    timeout-minutes: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v3
