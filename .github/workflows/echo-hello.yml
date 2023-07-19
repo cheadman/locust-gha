@@ -5,7 +5,7 @@ jobs:
   deploy:
     environment:
       name: echo hi
-    runs-on: [self-hosted, nonprod]
+    runs-on: self-hosted
     timeout-minutes: 1
     steps:
       - name: Checkout
